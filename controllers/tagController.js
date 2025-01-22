@@ -1,4 +1,4 @@
-const postsList = require('../data');
+const postsList = require('../data/data');
 
 const index = (req, res) => {
   const tags = []; 
