@@ -11,15 +11,15 @@ const index = (req, res) => {
     const sql ="SELECT * FROM `posts`;";
     connection.query(sql, (err, result) => {
        if(err){
-        return res.status(500), json({
+        return res.status(500).json({
             message: "Errore interno server",
         })
        } else{
-        return res.status(200), json({
-            status:"succes",
+        return res.status(200).json({
+            status:"success",
             data: result,
         })
-       }
+       };
     })
     
 };
@@ -27,7 +27,26 @@ const index = (req, res) => {
 
 // Funzione per gestire la rotta GET per mostrare uno specifico elenento in base all'id
 const show = (req, res) => {
-    
+    const sql = "SELECT * FROM `posts` WHERE `id`= ?";
+    const id = req.params.id;
+    connection.query(sql, [id], (err, posts) =>{
+        if(err){
+            return res.status(500).json({
+                message: "Errore interno server",
+            })
+        }if(posts.length === 0){
+            return res.status(400).json({
+                message: "Post non trovato",
+            })
+        } else{
+            return res.status(200).json({
+                status:"success",
+                data: posts[0],
+            })
+        };
+
+        
+    })
 
 };
 
@@ -51,7 +70,17 @@ const show = (req, res) => {
 
 // Funzione pr eliminare un post
 const destroy = (req, res) => {
-    
+    const sql = "DELETE FROM `posts` WHERE `id`= ?";
+    const id = req.params.id;
+    connection.query(sql, [id], (err) =>{
+        if(err){
+            return res.status(500).json({
+                message: "Errore interno server",
+            })
+        } else{
+            return res.sendStatus(204)
+        };
+    })
 };
 
 // Esporta le funzioni 
