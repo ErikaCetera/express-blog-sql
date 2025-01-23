@@ -30,12 +30,13 @@ const show = (req, res) => {
     const id = req.params.id;
     const sql = "SELECT * FROM `posts` WHERE `id`= ?";
 
-    const tagsSql = `SELECT posts.* , tags.label 
+    const tagsSql = `SELECT tags.*
     FROM posts 
     JOIN post_tag 
     ON posts.id = post_tag.post_id 
     JOIN tags 
-    ON tags.id = post_tag.tag_id`;
+    ON tags.id = post_tag.tag_id
+    WHERE posts.id = ?`;
 
 
     connection.query(sql, [id], (err, posts) => {
@@ -44,8 +45,7 @@ const show = (req, res) => {
             return res.status(500).json({
                 message: "Errore interno server"
             })
-        }
-        if (posts.length === 0) {
+        }else if (posts.length === 0) {
             return res.status(400).json({
                 message: "Post non trovato"
             })
